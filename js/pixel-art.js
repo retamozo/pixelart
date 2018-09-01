@@ -1,3 +1,11 @@
+var mouseSi = false;
+var paleta = document.getElementById("paleta");
+var grillaPixeles = document.getElementById("grilla-pixeles");
+var indicadorColor = document.getElementById('indicador-de-color');
+var borrarTodo = document.getElementById("borrar");
+$("#grilla-pixeles").hide();
+$("#grilla-pixeles").fadeIn(2000);
+
 var nombreColores = ['White', 'LightYellow',
 'LemonChiffon', 'LightGoldenrodYellow', 'PapayaWhip', 'Moccasin', 'PeachPuff', 'PaleGoldenrod', 'Bisque', 'NavajoWhite', 'Wheat', 'BurlyWood', 'Tan',
 'Khaki', 'Yellow', 'Gold', 'Orange', 'DarkOrange', 'OrangeRed', 'Tomato', 'Coral', 'DarkSalmon', 'LightSalmon', 'LightCoral', 'Salmon', 'PaleVioletRed',
@@ -19,12 +27,21 @@ var nombreColores = ['White', 'LightYellow',
 'MediumPurple', 'Lavender', 'Gainsboro', 'LightGray', 'Silver', 'DarkGray', 'Gray',
 'DimGray', 'LightSlateGray', 'DarkSlateGray', 'Black'
 ];
+// Variable para guardar el elemento 'color-personalizado'
+// Es decir, el que se elige con la rueda de color.
+var colorPersonalizado = document.getElementById('color-personalizado');
 
-var mouseSi = false;
+//paso 3 seleccionar color en la paleta de colores y que se guarde en colorPersonalizado
+colorPersonalizado.addEventListener('change',
+ (function() {
+   // Se guarda el color de la rueda en colorActual
+   colorActual = colorPersonalizado.value;
+   // Completar para que cambie el indicador-de-color al colorActual
+   indicadorColor.style.backgroundColor= colorActual;
+ })
+);
 
-// Paso 1 Parte 1
-var paleta = document.getElementById("paleta");
-var grillaPixeles = document.getElementById("grilla-pixeles");
+
 // Paso 2 - parte 1
 function paletaColores() {
   for (var i=0 ; i<nombreColores.length; i++) {
@@ -34,6 +51,7 @@ function paletaColores() {
     paleta.appendChild(divColores);
   }
 }
+paletaColores();
 //Paso 3 - parte 1
 function gPixeles(){
   for (var i=0; i<1750; i++){
@@ -41,92 +59,43 @@ function gPixeles(){
     grillaPixeles.appendChild(divPixel);
   }
 }
+gPixeles();
 //paso 1 - parte 2
-var colorSeleccionado = document.getElementById("indicador-de-color");
-paleta.addEventListener("click",seleccionarColor);
-function seleccionarColor(e){
-  colorSeleccionado.style.backgroundColor = e.target.style.backgroundColor;
+paleta.addEventListener("click",cambiarDeColor);
+function cambiarDeColor(e){
+  indicadorColor.style.backgroundColor = e.target.style.backgroundColor;
 }
-//paso 2 - parte 2
-function pintar(){
-  grillaPixeles.addEventListener("click",pintar);
-  function pintar(e){
- e.target.style.backgroundColor = colorSeleccionado.style.backgroundColor;
+
+//paso 2 - parte
+  grillaPixeles.addEventListener("click",pintarEnDiv);
+  function pintarEnDiv(e){
+      e.target.style.backgroundColor = indicadorColor.style.backgroundColor;
   }
-}
-// paso 3 - parte
-/*function  colPer(){
-var colorPersonalizado = document.getElementById('color-personalizado');
-  colorPersonalizado.addEventListener('change',(function(){
-//  Se guarda el color de la rueda en colorActual
- colorActual = colorPersonalizado.value;
-//  Completar para que cambie el indicador-de-color al colorActual
-  colorSeleccionado.style.backgroundColor = colorPersonalizado.value;
-}))};*/
+  pintar();
 
-// colorSeleccionado.addEventListener("change", function(){
-//   colorSeleccionado = colorPersonalizado.value;
-//   //  Se guarda el color de la rueda en colorActual
-//  colorSeleccionado.style.backgroundColor = colorActual;
-// });
 
-  
-
-// //paso 4 - parte 2
+//paso 4 - parte 2
 function haciendoClick(){
-  grillaPixeles.addEventListener('mousedown',function(){
-    mouseSi = true;
-    console.log("pinto");
-  })
-  grillaPixeles.addEventListener('mouseup',function(){
-    mouseSi = false;
-    console.log("no pinto");
-  })};
+grillaPixeles.addEventListener('mousedown',function(){
+  mouseSi = true;
+  console.log("pinto");
+})
+grillaPixeles.addEventListener('mouseup',function(){
+  mouseSi = false;
+  console.log("no pinto");
+})};
+haciendoClick();
 
-  //  paso 5 - parte 2
-  function pintarEnMov(){
+//  paso 5 - parte 2
     grillaPixeles.addEventListener("mouseover",pintar);
-    function pintar(e){
+      function pintar(e){
       if (mouseSi){
-        var enBlanco =  document.querySelector(".cursor-personalizado").style.backgroundColor;
-        e.target.style.backgroundColor = enBlanco;
-      }
+      pintarEnDiv(e);
     }
   }
 
-  // paso 1 - parte 3
-var botonBorrar = document.getElementById("borrar");
-botonBorrar.addEventListener("click", function(){
-  $("#grilla-pixeles div").animate({"background-color":"white"},2000);
-});
-
-// var borrador = document.getElementById("goma");
-// grillaPixeles.addEventListener("click", function(){
-//   console.log("borro");
-//     e.target.style.backgroundColor = borrador.style.backgroundColor;
-//   }
-
-
-
-
-
-  //paso 2 - parte 3
-  var imgSupers = document.querySelector(".imgs");
-  imgSupers.addEventListener("click", cargarImagen);
-  function cargarImagen(e){
-
-    cargarSuperheroe(eval(e.target.id));
-  }
-
- //paso 3 - parte 4
- var guardar = document.getElementById("guardar");
- guardar.addEventListener("click", guardarObra);
- function guardarObra(e){
-    guardarPixelArt(eval(e.target.id));
-  }
-
-  pintar();
-  haciendoClick();
-  pintarEnMov();
-  paletaColores();
-  gPixeles();
+borrarTodo.addEventListener("click", borrarDivs)
+function borrarDivs(e){
+  $("#grilla-pixeles div").animate({"background-color":"white"},1000);
+};
+borrarDivs();
